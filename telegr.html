@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Screenshot to Telegram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        input[type="file"], input[type="tel"], input[type="number"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="file"]:focus, input[type="tel"]:focus, input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .whatsapp-input {
+            border-color: #25D366; /* WhatsApp green */
+        }
+
+        .utr-input {
+            border-color: #FFB800; /* UTR Yellow */
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745; /* Green color for Submit */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out; /* Button animation */
+        }
+
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: scale(1.05); /* Button enlarges slightly on hover */
+        }
+
+        .loading {
+            font-size: 18px;
+            color: #007bff;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .fadeOut {
+            opacity: 0;
+            animation: fadeOut 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .success-message {
+            font-size: 20px;
+            font-weight: bold;
+            color: green;
+            margin-top: 20px;
+        }
+
+        .back-home-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Send Screenshot to Telegram</h2>
+
+        <!-- WhatsApp Number Input -->
+        <input type="tel" id="whatsappNumber" class="whatsapp-input" placeholder="Enter WhatsApp Number" pattern="[0-9]{10}" required>
+
+        <!-- UTR Number Input -->
+        <input type="number" id="utrNumber" class="utr-input" placeholder="Enter UTR Number" required>
+
+        <!-- File Input -->
+        <input type="file" id="fileInput" accept="image/*">
+
+        <!-- Submit Button -->
+        <button id="submitButton" onclick="sendMessage()">Submit</button>
+
+        <!-- Loading Message (Hidden Initially) -->
+        <div id="loadingMessage" class="loading" style="display:none;">Sending...</div>
+
+        <!-- Success Message (Hidden Initially) -->
+        <div id="successMessage" class="success-message" style="display:none;">Successfully Submitted!</div>
+
+        <!-- Back to Home Button (Hidden Initially) -->
+        <button id="backHomeButton" class="back-home-button" style="display:none;" onclick="window.location.href = 'ott.html';">Back to Home</button>
+    </div>
+
+    <script>
+        // Your Telegram Bot Details
+        const botToken = "7632352886:AAEyGJPQkyXYUkFJ5oAbJJbMTtpwoqPr-1s";  
+        const chatId = "5247395156";  // ✅ Updated chat ID
+
+        async function sendMessage() {
+            let fileInput = document.getElementById("fileInput");
+            let file = fileInput.files[0];
+            let whatsappNumber = document.getElementById("whatsappNumber").value.trim();
+            let utrNumber = document.getElementById("utrNumber").value.trim();
+
+            // Validate WhatsApp and UTR number
+            if (whatsappNumber === "" || utrNumber === "") {
+                alert("Please fill in the WhatsApp Number and UTR Number.");
+                return;
+            }
+
+            try {
+                // Display loading message and hide submit button
+                document.getElementById("submitButton").style.display = "none";
+                document.getElementById("loadingMessage").style.display = "block";
+
+                // Send photo if any file is selected
+                if (file) {
+                    await sendPhoto(file);
+                }
+
+                // Send the WhatsApp & UTR details as a message
+                let message = `WhatsApp Number: ${whatsappNumber}\nUTR Number: ${utrNumber}`;
+                await sendTextMessage(message);
+
+                // After successful submission, show success message and "Back to Home" button
+                document.getElementById("loadingMessage").style.display = "none";
+                document.getElementById("successMessage").style.display = "block";
+                document.getElementById("backHomeButton").style.display = "block";
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error sending message or image.");
+                // Show submit button again if there was an error
+                document.getElementById("submitButton").style.display = "block";
+                document.getElementById("loadingMessage").style.display = "none";
+            }
+        }
+
+        async function sendTextMessage(message) {
+            let apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            let data = {
+                chat_id: chatId,
+                text: message
+            };
+
+            try {
+                let response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                let result = await response.json();
+                if (result.ok) {
+                    console.log("Message sent successfully!");
+                } else {
+                    console.error("Telegram API error:", result);
+                    alert("Error sending message.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to send message.");
+            }
+        }
+
+        async function sendPhoto(file) {
+            let apiUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+
+            // Validate file type
+            const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+            if (!allowedTypes.includes(file.type)) {
+                alert("Unsupported file type. Please upload a JPG, PNG, or WEBP image.");
+                return;
+            }
+
+            // Validate file size (max 20MB for images)
+            if (file.size > 20 * 1024 * 1024) {
+                alert("File too large! Telegram only allows photos up to 20MB.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("chat_id", chatId);
+            formData.append("photo", file);
+
+            try {
+                let response = await fetch(apiUrl, {
+                    method: "POST",
+                    body: formData
+                });
+
+                let result = await response.json();
+                if (result.ok) {
+                    console.log("Screenshot sent successfully!");
+                } else {
+                    console.error("Telegram API error:", result);
+                    alert("Error sending screenshot. Reason: " + result.description);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to send screenshot.");
+            }
+        }
+    </script>
+
+</body>
+</html>

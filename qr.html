@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image with Description and Next Button</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .image-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .description {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .next-button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        .next-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Image Section -->
+    <div class="image-container">
+        <img src="https://telegraphoto.site/images/k66vq3b0q4qpi5glhzx7q090k.jpg" alt="Your Image">
+    </div>
+
+    <!-- Description Section -->
+    <div class="description">
+        <h2>Image Description</h2>
+        <p>This is a description of the image. Here you can provide additional context about the image, what it represents, or any other important information.</p>
+    </div>
+
+    <!-- Next Button -->
+    <button class="next-button" id="nextButton">Next</button>
+
+    <script>
+        // When the "Next" button is clicked, open the telegr.html page
+        document.getElementById('nextButton').addEventListener('click', function() {
+            window.location.href = "telegr.html"; // Redirect to telegr.html
+        });
+    </script>
+
+</body>
+</html>
