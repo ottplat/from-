@@ -72,9 +72,10 @@
 
         .product-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns */
+            gap: 20px;
             padding: 40px;
+            justify-content: center;
         }
 
         .product-card {
@@ -149,7 +150,6 @@
         </nav>
     </header>
 
-    <!-- Homepage Section -->
     <section id="home">
         <div class="banner">
             <h2>Welcome to StreamFlix</h2>
@@ -157,63 +157,51 @@
         </div>
 
         <section class="product-section">
-            <!-- Gmail Premium -->
             <div class="product-card">
                 <img src="https://ottstore.io/gmail.svg" alt="Gmail Premium">
                 <h3>Gmail Premium</h3>
                 <p>Secure, verified email accounts.</p>
                 <p class="price">$5.99 <span class="discount">$9.99</span></p>
-                <!-- Buy Now Button -->
                 <a href="qr.html"><button class="buy-button">Buy Now</button></a>
             </div>
 
-            <!-- Netflix Premium -->
             <div class="product-card">
                 <img src="https://i.postimg.cc/Nj6nJ3z4/download-1.png" alt="Netflix Premium">
                 <h3>Netflix Premium</h3>
                 <p>Unlimited streaming in 4K UHD.</p>
                 <p class="price">$9.99 <span class="discount">$14.99</span></p>
-                <!-- Buy Now Button -->
                 <a href="qr.html"><button class="buy-button">Buy Now</button></a>
             </div>
 
-            <!-- Amazon Prime -->
             <div class="product-card">
                 <img src="https://ottstore.io/MAMA/mama.png" alt="Amazon Prime">
                 <h3>Amazon Prime</h3>
                 <p>Stream and shop with exclusive deals.</p>
                 <p class="price">$7.99 <span class="discount">$11.99</span></p>
-                <!-- Buy Now Button -->
                 <a href="qr.html"><button class="buy-button">Buy Now</button></a>
             </div>
 
-            <!-- Spotify Premium -->
             <div class="product-card">
                 <img src="https://ottstore.io/MAMA/mama1.png" alt="Spotify Premium">
                 <h3>Spotify Premium</h3>
                 <p>Ad-free music streaming.</p>
                 <p class="price">$6.99 <span class="discount">$10.99</span></p>
-                <!-- Buy Now Button -->
                 <a href="qr.html"><button class="buy-button">Buy Now</button></a>
             </div>
 
-            <!-- Disney+ Hotstar -->
             <div class="product-card">
                 <img src="https://ottstore.io/MAMA/mama5.png" alt="Disney+ Hotstar">
                 <h3>Disney+ Hotstar</h3>
                 <p>Enjoy the latest movies and shows.</p>
                 <p class="price">$8.99 <span class="discount">$12.99</span></p>
-                <!-- Buy Now Button -->
                 <a href="qr.html"><button class="buy-button">Buy Now</button></a>
             </div>
 
-            <!-- Crunchyroll Premium -->
             <div class="product-card">
                 <img src="https://ottstore.io/MAMA/mama2.png" alt="Crunchyroll Premium">
                 <h3>Crunchyroll Premium</h3>
                 <p>Watch anime ad-free.</p>
                 <p class="price">$7.99 <span class="discount">$10.99</span></p>
-                <!-- Buy Now Button -->
                 <a href="qr.html"><button class="buy-button">Buy Now</button></a>
             </div>
         </section>
@@ -222,6 +210,5 @@
     <footer>
         <p>&copy; 2025 StreamFlix. All Rights Reserved.</p>
     </footer>
-
 </body>
 </html>
