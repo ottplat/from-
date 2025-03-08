@@ -11,6 +11,12 @@
             text-align: center;
             padding: 20px;
             color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .form-container {
@@ -18,16 +24,15 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            width: 100%;
+            width: 90%;
             max-width: 400px;
-            margin: auto;
             color: black;
         }
 
         input[type="tel"], input[type="number"], input[type="file"] {
             padding: 10px;
             margin: 10px 0;
-            width: 100%;
+            width: calc(100% - 22px);
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -41,6 +46,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: transform 0.2s ease, background-color 0.3s;
+            width: 100%;
         }
 
         button:hover {
@@ -48,13 +54,20 @@
             transform: scale(1.05);
         }
 
-        .success-message {
-            font-size: 18px;
+        .success-message, .error-message {
+            font-size: 16px;
             font-weight: bold;
-            color: green;
             margin-top: 20px;
+        }
+
+        .success-message {
+            color: green;
             opacity: 0;
             animation: fadeIn 1s forwards;
+        }
+
+        .error-message {
+            color: red;
         }
 
         @keyframes fadeIn {
@@ -62,11 +75,13 @@
             to { opacity: 1; }
         }
 
-        .error-message {
-            font-size: 16px;
-            font-weight: bold;
-            color: red;
+        .discussion {
+            max-width: 90%;
+            text-align: left;
             margin-top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
         }
     </style>
 </head>
