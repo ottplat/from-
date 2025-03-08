@@ -18,7 +18,6 @@
             justify-content: center;
             min-height: 100vh;
         }
-
         .form-container {
             background-color: white;
             padding: 20px;
@@ -28,15 +27,13 @@
             max-width: 400px;
             color: black;
         }
-
-        input[type="tel"], input[type="number"], input[type="file"] {
+        input, select {
             padding: 10px;
             margin: 10px 0;
             width: calc(100% - 22px);
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
         button {
             padding: 12px 20px;
             background-color: #28a745;
@@ -48,114 +45,79 @@
             transition: transform 0.2s ease, background-color 0.3s;
             width: 100%;
         }
-
         button:hover {
             background-color: #218838;
             transform: scale(1.05);
         }
-
-        .success-message, .error-message {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .success-message {
-            color: green;
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
-
-        .error-message {
+        .error {
             color: red;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .discussion {
-            max-width: 90%;
-            text-align: left;
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 10px;
+            font-size: 12px;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h2>ENTER PAYMENT DETAILS</h2>
-        <input type="tel" id="whatsappNumber" placeholder="Enter your WhatsApp Number" pattern="[0-9]{10}" required>
-        <input type="number" id="utrNumber" placeholder="Enter payment UTR Number" required>
+        <h2>Enter Payment Details</h2>
+        <input type="tel" id="whatsappNumber" placeholder="Enter WhatsApp Number" pattern="[0-9]{10}" required>
+        <input type="text" id="utrNumber" placeholder="Enter UTR Number" required maxlength="12" pattern="\d{12}">
+        <small style="display: block; color: gray; margin-bottom: 10px;">The UTR (Unique Transaction Reference) number is a 12-digit code provided by your bank after a successful transaction.</small>
+        <span class="error" id="utrError">UTR Number must be exactly 12 digits.</span>
         <input type="file" id="fileInput" accept="image/*">
-        <button id="submitButton" onclick="sendMessage()">Submit</button>
+        <select id="frameworkSelect">
+            <option>Gmail Account 1 MONTH</option>
+            <option>NETFLIX 1 MONTH</option>
+            <option>AMZON PRIME 1 MONTH</option>
+            <option>SPOTIFY 1 MONTH</option>
+            <option>JIO HOTSTAR 1 MONTH</option>
+            <option>CRUNCHY ROLL 1 MONTH</option>
+        </select>
+        <button onclick="sendMessage()">Submit</button>
         <div id="loadingMessage" style="display:none;">Sending...</div>
-        <div id="successMessage" class="success-message" style="display:none;">Successfully Submitted!</div>
-        <div id="errorMessage" class="error-message" style="display:none;">Error sending message or image.</div>
-        <button id="backHomeButton" style="display:none;" onclick="window.location.href = 'index.html';">Back to Home</button>
+        <div id="successMessage" style="display:none;color:green;">Successfully Submitted!</div>
+        <div id="errorMessage" style="display:none;color:red;">Error sending message or image.</div>
     </div>
-
     <script>
         const botToken = "7930171564:AAEbqIoIGZY22cP4GxreLAWhQxD08rQOtrQ";
         const chatId = "5247395156";
-        const apiBaseUrl = "https://api.telegram.org/bot" + botToken;
-
         async function sendMessage() {
-            let fileInput = document.getElementById("fileInput");
-            let file = fileInput.files[0];
+            let fileInput = document.getElementById("fileInput").files[0];
             let whatsappNumber = document.getElementById("whatsappNumber").value.trim();
             let utrNumber = document.getElementById("utrNumber").value.trim();
-
-            if (whatsappNumber === "" || utrNumber === "") {
-                alert("Please fill in the WhatsApp Number and UTR Number.");
+            let framework = document.getElementById("frameworkSelect").value;
+            let utrError = document.getElementById("utrError");
+            
+            if (!whatsappNumber || !utrNumber) {
+                alert("Please fill in all fields.");
                 return;
             }
-
-            document.getElementById("submitButton").style.display = "none";
-            document.getElementById("loadingMessage").style.display = "block";
-
-            let message = `WhatsApp Number: ${whatsappNumber}\nUTR Number: ${utrNumber}`;
-            let textSent = await sendTextMessage(message);
-            let imageSent = file ? await sendPhoto(file) : true;
-
-            if (textSent && imageSent) {
-                document.getElementById("loadingMessage").style.display = "none";
-                document.getElementById("successMessage").style.display = "block";
-                document.getElementById("backHomeButton").style.display = "block";
+            
+            if (!/^\d{12}$/.test(utrNumber)) {
+                utrError.style.display = "block";
+                return;
             } else {
-                document.getElementById("loadingMessage").style.display = "none";
-                document.getElementById("errorMessage").style.display = "block";
-                document.getElementById("submitButton").style.display = "block";
+                utrError.style.display = "none";
             }
-        }
-
-        async function sendTextMessage(message) {
-            let apiUrl = `${apiBaseUrl}/sendMessage`;
-            let data = { chat_id: chatId, text: message };
-            let response = await fetch(apiUrl, {
+            
+            document.getElementById("loadingMessage").style.display = "block";
+            let textSent = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-            let result = await response.json();
-            return result.ok;
+                body: JSON.stringify({ chat_id: chatId, text: `WhatsApp: ${whatsappNumber}\nUTR: ${utrNumber}\nFramework: ${framework}` })
+            }).then(res => res.json());
+            let imageSent = fileInput ? await sendPhoto(fileInput) : true;
+            document.getElementById("loadingMessage").style.display = "none";
+            document.getElementById(textSent.ok && imageSent ? "successMessage" : "errorMessage").style.display = "block";
         }
-
         async function sendPhoto(file) {
-            let apiUrl = `${apiBaseUrl}/sendPhoto`;
             let formData = new FormData();
             formData.append("chat_id", chatId);
             formData.append("photo", file);
-            let response = await fetch(apiUrl, { method: "POST", body: formData });
-            let result = await response.json();
-            return result.ok;
+            let response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, { method: "POST", body: formData });
+            return (await response.json()).ok;
         }
     </script>
-
-    <div class="discussion">
+    <div class="discussion" style="margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; text-align: left; max-width: 90%;">
         <h3>Discussion</h3>
         <p>Submit the copied UTR (Unique Transaction Reference) number and the payment screenshot. Enter your WhatsApp number for verification. After 2 to 3 hours, you will receive your account details on WhatsApp.</p>
     </div>
